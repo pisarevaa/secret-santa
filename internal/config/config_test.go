@@ -1,17 +1,19 @@
 package config_test
 
 import (
-	"os"
 	"testing"
 
 	"github.com/andreypisarev/secret-santa/internal/config"
 )
 
 func TestLoad_Defaults(t *testing.T) {
-	os.Unsetenv("PORT")
-	os.Unsetenv("ENV")
-	os.Unsetenv("DATABASE_PATH")
-	os.Unsetenv("LOG_LEVEL")
+	t.Setenv("PORT", "")
+	t.Setenv("ENV", "")
+	t.Setenv("DATABASE_PATH", "")
+	t.Setenv("LOG_LEVEL", "")
+	t.Setenv("BASE_URL", "")
+	t.Setenv("RESEND_API_KEY", "")
+	t.Setenv("EMAIL_FROM", "")
 
 	cfg, err := config.Load()
 	if err != nil {
@@ -67,5 +69,14 @@ func TestLoad_InvalidPort(t *testing.T) {
 	_, err := config.Load()
 	if err == nil {
 		t.Fatal("expected error for invalid PORT")
+	}
+}
+
+func TestLoad_PortOutOfRange(t *testing.T) {
+	t.Setenv("PORT", "99999")
+
+	_, err := config.Load()
+	if err == nil {
+		t.Fatal("expected error for out-of-range PORT")
 	}
 }

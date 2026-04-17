@@ -52,16 +52,21 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
+	serverErr := make(chan error, 1)
 	go func() {
 		slog.Info("server starting", "port", cfg.Port, "env", cfg.Env)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			slog.Error("server error", "error", err)
-			os.Exit(1)
+			serverErr <- err
 		}
 	}()
 
-	<-ctx.Done()
-	slog.Info("shutting down...")
+	select {
+	case <-ctx.Done():
+		slog.Info("shutting down...")
+	case err := <-serverErr:
+		slog.Error("server error", "error", err)
+		stop()
+	}
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

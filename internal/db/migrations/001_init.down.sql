@@ -1,0 +1,8 @@
+DROP INDEX IF EXISTS idx_memberships_group;
+DROP INDEX IF EXISTS idx_messages_pair;
+DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS magic_links;
+DROP TABLE IF EXISTS memberships;
+DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS users;

@@ -34,7 +34,7 @@
 
 ---
 
-### Фича 1: Инициализация проекта и структура
+### Фича 1: Инициализация проекта и структура ✅
 
 **Цель:** Go-модуль компилируется, Vite-проект собирается, dev-режим работает (Vite проксирует на Go), healthcheck отвечает 200.
 
@@ -52,7 +52,7 @@
 
 **Шаги:**
 
-- [ ] **Шаг 1: Создать `.gitignore`**
+- [x] **Шаг 1: Создать `.gitignore`**
 
 ```gitignore
 # Go
@@ -74,14 +74,14 @@ web/dist/
 .DS_Store
 ```
 
-- [ ] **Шаг 2: Инициализировать Go-модуль**
+- [x] **Шаг 2: Инициализировать Go-модуль**
 
 ```bash
 cd /Users/andreypisarev/other/secret-santa
 go mod init github.com/andreypisarev/secret-santa
 ```
 
-- [ ] **Шаг 3: Создать `internal/config/config.go`**
+- [x] **Шаг 3: Создать `internal/config/config.go`**
 
 ```go
 package config
@@ -143,7 +143,7 @@ func (c *Config) IsDev() bool {
 }
 ```
 
-- [ ] **Шаг 4: Написать тест для config**
+- [x] **Шаг 4: Написать тест для config**
 
 Создать `internal/config/config_test.go`:
 
@@ -222,7 +222,7 @@ func TestLoad_InvalidPort(t *testing.T) {
 }
 ```
 
-- [ ] **Шаг 5: Запустить тест config и убедиться, что проходит**
+- [x] **Шаг 5: Запустить тест config и убедиться, что проходит**
 
 ```bash
 go test ./internal/config/ -v
@@ -230,7 +230,7 @@ go test ./internal/config/ -v
 
 Ожидаемый результат: все 3 теста PASS.
 
-- [ ] **Шаг 6: Создать `cmd/server/main.go`**
+- [x] **Шаг 6: Создать `cmd/server/main.go`**
 
 ```go
 package main
@@ -307,7 +307,7 @@ func main() {
 }
 ```
 
-- [ ] **Шаг 7: Установить зависимость chi и убедиться, что сервер компилируется**
+- [x] **Шаг 7: Установить зависимость chi и убедиться, что сервер компилируется**
 
 ```bash
 go get github.com/go-chi/chi/v5
@@ -316,7 +316,7 @@ go build ./cmd/server/
 
 Ожидаемый результат: компиляция без ошибок.
 
-- [ ] **Шаг 8: Инициализировать Vite-проект с React + TypeScript**
+- [x] **Шаг 8: Инициализировать Vite-проект с React + TypeScript**
 
 ```bash
 cd /Users/andreypisarev/other/secret-santa
@@ -326,7 +326,7 @@ npm install
 npm install -D @tailwindcss/vite
 ```
 
-- [ ] **Шаг 9: Настроить Tailwind CSS в Vite**
+- [x] **Шаг 9: Настроить Tailwind CSS в Vite**
 
 Заменить содержимое `web/vite.config.ts`:
 
@@ -356,7 +356,7 @@ export default defineConfig({
 @import "tailwindcss";
 ```
 
-- [ ] **Шаг 10: Создать минимальный `web/src/App.tsx`**
+- [x] **Шаг 10: Создать минимальный `web/src/App.tsx`**
 
 ```tsx
 function App() {
@@ -385,7 +385,7 @@ createRoot(document.getElementById("root")!).render(
 );
 ```
 
-- [ ] **Шаг 11: Создать `embed.go` в корне проекта**
+- [x] **Шаг 11: Создать `embed.go` в корне проекта**
 
 ```go
 package secretsanta
@@ -396,7 +396,7 @@ import "embed"
 var WebDist embed.FS
 ```
 
-- [ ] **Шаг 12: Создать `.env.example`**
+- [x] **Шаг 12: Создать `.env.example`**
 
 ```
 BASE_URL=http://localhost:5173
@@ -409,7 +409,7 @@ ENV=development
 LOG_LEVEL=debug
 ```
 
-- [ ] **Шаг 13: Убедиться, что фронт собирается**
+- [x] **Шаг 13: Убедиться, что фронт собирается**
 
 ```bash
 cd /Users/andreypisarev/other/secret-santa/web
@@ -418,7 +418,7 @@ npm run build
 
 Ожидаемый результат: `web/dist/` создана, сборка без ошибок.
 
-- [ ] **Шаг 14: Убедиться, что Go-проект компилируется с embed**
+- [x] **Шаг 14: Убедиться, что Go-проект компилируется с embed**
 
 ```bash
 cd /Users/andreypisarev/other/secret-santa
@@ -427,7 +427,7 @@ go build ./cmd/server/
 
 Ожидаемый результат: компиляция без ошибок.
 
-- [ ] **Шаг 15: Коммит**
+- [x] **Шаг 15: Коммит**
 
 ```bash
 git add .gitignore go.mod go.sum cmd/ internal/config/ embed.go web/ .env.example
@@ -435,9 +435,9 @@ git commit -m "feat: инициализация проекта — Go-серве
 ```
 
 **Проверка:**
-- [ ] `go test ./internal/config/ -v` — все тесты проходят
-- [ ] `go build ./cmd/server/` — компилируется без ошибок
-- [ ] `cd web && npm run build` — фронт собирается
+- [x] `go test ./internal/config/ -v` — все тесты проходят
+- [x] `go build ./cmd/server/` — компилируется без ошибок
+- [x] `cd web && npm run build` — фронт собирается
 
 ---
 

@@ -441,7 +441,7 @@ git commit -m "feat: инициализация проекта — Go-серве
 
 ---
 
-### Фича 2: База данных и миграции
+### Фича 2: База данных и миграции ✅
 
 **Цель:** SQLite подключается на старте, миграции применяются автоматически, таблицы создаются. sqlc генерирует типобезопасные Go-запросы.
 
@@ -461,7 +461,7 @@ git commit -m "feat: инициализация проекта — Go-серве
 
 **Шаги:**
 
-- [ ] **Шаг 1: Создать миграцию `internal/db/migrations/001_init.up.sql`**
+- [x] **Шаг 1: Создать миграцию `internal/db/migrations/001_init.up.sql`**
 
 ```sql
 CREATE TABLE users (
@@ -519,7 +519,7 @@ CREATE INDEX idx_messages_pair ON messages(group_id, sender_id, recipient_id, cr
 CREATE INDEX idx_memberships_group ON memberships(group_id);
 ```
 
-- [ ] **Шаг 2: Создать миграцию `internal/db/migrations/001_init.down.sql`**
+- [x] **Шаг 2: Создать миграцию `internal/db/migrations/001_init.down.sql`**
 
 ```sql
 DROP INDEX IF EXISTS idx_memberships_group;
@@ -532,7 +532,7 @@ DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS users;
 ```
 
-- [ ] **Шаг 3: Создать `internal/db/db.go`**
+- [x] **Шаг 3: Создать `internal/db/db.go`**
 
 ```go
 package db
@@ -596,7 +596,7 @@ func Migrate(db *sql.DB) error {
 
 **Важно:** `golang-migrate` с SQLite через `modernc.org/sqlite` может потребовать драйвер `sqlite` вместо `sqlite3`. Если `github.com/golang-migrate/migrate/v4/database/sqlite` не существует, используй `github.com/golang-migrate/migrate/v4/database/sqlite3` — он работает с любым драйвером, зарегистрированным как `"sqlite"` или `"sqlite3"` в `database/sql`. Проверь при компиляции и поправь импорт.
 
-- [ ] **Шаг 4: Написать тест для подключения и миграций**
+- [x] **Шаг 4: Написать тест для подключения и миграций**
 
 Создать `internal/db/db_test.go`:
 
@@ -648,7 +648,7 @@ func TestMigrate_Idempotent(t *testing.T) {
 }
 ```
 
-- [ ] **Шаг 5: Установить зависимости и запустить тесты**
+- [x] **Шаг 5: Установить зависимости и запустить тесты**
 
 ```bash
 go get modernc.org/sqlite
@@ -660,7 +660,7 @@ go test ./internal/db/ -v
 
 Ожидаемый результат: оба теста PASS. Если импорт `database/sqlite` не работает — заменить на `database/sqlite3` и повторить.
 
-- [ ] **Шаг 6: Создать `sqlc.yaml` в корне проекта**
+- [x] **Шаг 6: Создать `sqlc.yaml` в корне проекта**
 
 ```yaml
 version: "2"
@@ -674,7 +674,7 @@ sql:
         out: "internal/db/sqlc"
 ```
 
-- [ ] **Шаг 7: Создать SQL-запросы для sqlc — `internal/db/queries/users.sql`**
+- [x] **Шаг 7: Создать SQL-запросы для sqlc — `internal/db/queries/users.sql`**
 
 ```sql
 -- name: CreateUser :one
@@ -690,7 +690,7 @@ SELECT * FROM users WHERE id = ?;
 UPDATE users SET name = ? WHERE id = ?;
 ```
 
-- [ ] **Шаг 8: Создать `internal/db/queries/auth.sql`**
+- [x] **Шаг 8: Создать `internal/db/queries/auth.sql`**
 
 ```sql
 -- name: CreateMagicLink :exec
@@ -712,7 +712,7 @@ SELECT * FROM sessions WHERE token = ? AND expires_at > CURRENT_TIMESTAMP;
 DELETE FROM sessions WHERE token = ?;
 ```
 
-- [ ] **Шаг 9: Создать `internal/db/queries/groups.sql`**
+- [x] **Шаг 9: Создать `internal/db/queries/groups.sql`**
 
 ```sql
 -- name: CreateGroup :one
@@ -728,7 +728,7 @@ SELECT * FROM groups WHERE id = ?;
 UPDATE groups SET status = 'drawn', drawn_at = CURRENT_TIMESTAMP WHERE id = ? AND status = 'open';
 ```
 
-- [ ] **Шаг 10: Создать `internal/db/queries/memberships.sql`**
+- [x] **Шаг 10: Создать `internal/db/queries/memberships.sql`**
 
 ```sql
 -- name: CreateMembership :one
@@ -759,7 +759,7 @@ WHERE m.group_id = ? AND m.user_id = ? AND m.recipient_id IS NOT NULL;
 SELECT COUNT(*) FROM memberships WHERE group_id = ?;
 ```
 
-- [ ] **Шаг 11: Создать `internal/db/queries/messages.sql`**
+- [x] **Шаг 11: Создать `internal/db/queries/messages.sql`**
 
 ```sql
 -- name: CreateMessage :one
@@ -778,7 +778,7 @@ ORDER BY created_at DESC
 LIMIT 50;
 ```
 
-- [ ] **Шаг 12: Установить sqlc и сгенерировать код**
+- [x] **Шаг 12: Установить sqlc и сгенерировать код**
 
 ```bash
 go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
@@ -787,7 +787,7 @@ sqlc generate
 
 Ожидаемый результат: файлы появятся в `internal/db/sqlc/`.
 
-- [ ] **Шаг 13: Подключить БД в `cmd/server/main.go`**
+- [x] **Шаг 13: Подключить БД в `cmd/server/main.go`**
 
 Добавить после загрузки конфига:
 
@@ -807,7 +807,7 @@ if err := db.Migrate(database); err != nil {
 
 Добавить импорт `"github.com/andreypisarev/secret-santa/internal/db"`.
 
-- [ ] **Шаг 14: Проверить компиляцию и тесты**
+- [x] **Шаг 14: Проверить компиляцию и тесты**
 
 ```bash
 go build ./cmd/server/
@@ -816,7 +816,7 @@ go test ./internal/... -v
 
 Ожидаемый результат: компиляция и все тесты проходят.
 
-- [ ] **Шаг 15: Коммит**
+- [x] **Шаг 15: Коммит**
 
 ```bash
 git add sqlc.yaml internal/db/ cmd/server/main.go go.mod go.sum
@@ -824,9 +824,9 @@ git commit -m "feat: SQLite + миграции + sqlc-запросы для вс
 ```
 
 **Проверка:**
-- [ ] `go test ./internal/db/ -v` — тесты миграций проходят
-- [ ] `sqlc generate` — генерация без ошибок
-- [ ] `go build ./cmd/server/` — компилируется
+- [x] `go test ./internal/db/ -v` — тесты миграций проходят
+- [x] `sqlc generate` — генерация без ошибок
+- [x] `go build ./cmd/server/` — компилируется
 
 ---
 

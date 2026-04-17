@@ -71,6 +71,8 @@ func main() {
 		Config:  cfg,
 	}
 
+	groupHandler := &handlers.GroupHandler{Queries: queries}
+
 	r := chi.NewRouter()
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.RealIP)
@@ -86,6 +88,14 @@ func main() {
 	r.Group(func(r chi.Router) {
 		r.Use(mw.RequireSession(queries))
 		r.Get("/api/auth/me", authHandler.Me)
+		r.Post("/api/groups", groupHandler.Create)
+		r.Post("/api/groups/{inviteCode}/join", groupHandler.Join)
+		r.Patch("/api/memberships/{id}", groupHandler.UpdateWishlist)
+	})
+
+	r.Group(func(r chi.Router) {
+		r.Use(mw.OptionalSession(queries))
+		r.Get("/api/groups/{inviteCode}", groupHandler.GetByInviteCode)
 	})
 
 	srv := &http.Server{

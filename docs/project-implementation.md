@@ -1617,7 +1617,7 @@ git commit -m "feat: аутентификация — magic link, сессии, 
 
 ---
 
-### Фича 4: Группы — создание, приглашение, вступление
+### Фича 4: Группы — создание, приглашение, вступление ✅
 
 **Цель:** Организатор создает группу, получает invite-ссылку. Участник переходит по ссылке, видит название группы, вступает с именем и вишлистом. Страница группы показывает список участников.
 
@@ -1630,7 +1630,7 @@ git commit -m "feat: аутентификация — magic link, сессии, 
 
 **Шаги:**
 
-- [ ] **Шаг 1: Создать `internal/groups/groups.go`**
+- [x] **Шаг 1: Создать `internal/groups/groups.go`**
 
 ```go
 package groups
@@ -1657,7 +1657,7 @@ func GenerateInviteCode() (string, error) {
 }
 ```
 
-- [ ] **Шаг 2: Написать тест для invite-кода**
+- [x] **Шаг 2: Написать тест для invite-кода**
 
 Создать `internal/groups/groups_test.go`:
 
@@ -1693,7 +1693,7 @@ func TestGenerateInviteCode(t *testing.T) {
 }
 ```
 
-- [ ] **Шаг 3: Запустить тест**
+- [x] **Шаг 3: Запустить тест**
 
 ```bash
 go test ./internal/groups/ -v
@@ -1701,7 +1701,7 @@ go test ./internal/groups/ -v
 
 Ожидаемый результат: PASS.
 
-- [ ] **Шаг 4: Создать `internal/http/handlers/groups.go`**
+- [x] **Шаг 4: Создать `internal/http/handlers/groups.go`**
 
 ```go
 package handlers
@@ -1935,7 +1935,7 @@ func (h *GroupHandler) UpdateWishlist(w http.ResponseWriter, r *http.Request) {
 
 **Заметка:** Парсинг `membershipID` — упрощенный. Лучше использовать `strconv.ParseInt`. Исполнитель должен заменить ручной парсинг на `strconv.ParseInt(membershipID, 10, 64)`.
 
-- [ ] **Шаг 5: Написать тесты для group handlers**
+- [x] **Шаг 5: Написать тесты для group handlers**
 
 Создать `internal/http/handlers/groups_test.go`:
 
@@ -2053,7 +2053,7 @@ func TestJoinGroup(t *testing.T) {
 }
 ```
 
-- [ ] **Шаг 6: Подключить роуты групп в `cmd/server/main.go`**
+- [x] **Шаг 6: Подключить роуты групп в `cmd/server/main.go`**
 
 ```go
 groupHandler := &handlers.GroupHandler{Queries: queries}
@@ -2071,7 +2071,7 @@ r.Group(func(r chi.Router) {
 })
 ```
 
-- [ ] **Шаг 7: Запустить все тесты**
+- [x] **Шаг 7: Запустить все тесты**
 
 ```bash
 go test ./internal/... -v
@@ -2079,7 +2079,7 @@ go test ./internal/... -v
 
 Ожидаемый результат: все тесты PASS.
 
-- [ ] **Шаг 8: Коммит**
+- [x] **Шаг 8: Коммит**
 
 ```bash
 git add internal/groups/ internal/http/handlers/groups.go internal/http/handlers/groups_test.go cmd/server/main.go
@@ -2087,8 +2087,8 @@ git commit -m "feat: группы — создание, приглашение, 
 ```
 
 **Проверка:**
-- [ ] `go test ./internal/... -v` — все тесты проходят
-- [ ] `go build ./cmd/server/` — компилируется
+- [x] `go test ./internal/... -v` — все тесты проходят
+- [x] `go build ./cmd/server/` — компилируется
 
 ---
 

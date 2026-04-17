@@ -1,1 +1,17 @@
-.worktrees/
+# Go
+/cmd/server/server
+
+# Node
+web/node_modules/
+web/dist/
+
+# Environment
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store

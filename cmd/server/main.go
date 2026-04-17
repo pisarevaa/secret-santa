@@ -72,6 +72,7 @@ func main() {
 	}
 
 	groupHandler := &handlers.GroupHandler{Queries: queries}
+	drawHandler := &handlers.DrawHandler{Queries: queries, DB: database}
 
 	r := chi.NewRouter()
 	r.Use(middleware.Recoverer)
@@ -91,6 +92,8 @@ func main() {
 		r.Post("/api/groups", groupHandler.Create)
 		r.Post("/api/groups/{inviteCode}/join", groupHandler.Join)
 		r.Patch("/api/memberships/{id}", groupHandler.UpdateWishlist)
+		r.Post("/api/groups/{id}/draw", drawHandler.Draw)
+		r.Get("/api/groups/{id}/my-recipient", drawHandler.MyRecipient)
 	})
 
 	r.Group(func(r chi.Router) {

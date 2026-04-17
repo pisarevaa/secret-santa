@@ -830,7 +830,7 @@ git commit -m "feat: SQLite + миграции + sqlc-запросы для вс
 
 ---
 
-### Фича 3: Аутентификация — magic link и сессии
+### Фича 3: Аутентификация — magic link и сессии ✅
 
 **Цель:** Пользователь запрашивает magic link по email, переходит по ссылке, получает сессионную cookie. Middleware `RequireSession` защищает эндпоинты. В dev-режиме ссылка печатается в лог.
 
@@ -847,7 +847,7 @@ git commit -m "feat: SQLite + миграции + sqlc-запросы для вс
 
 **Шаги:**
 
-- [ ] **Шаг 1: Создать `internal/auth/auth.go`**
+- [x] **Шаг 1: Создать `internal/auth/auth.go`**
 
 ```go
 package auth
@@ -868,7 +868,7 @@ func GenerateToken() (string, error) {
 }
 ```
 
-- [ ] **Шаг 2: Написать тест для `GenerateToken`**
+- [x] **Шаг 2: Написать тест для `GenerateToken`**
 
 Создать `internal/auth/auth_test.go`:
 
@@ -905,7 +905,7 @@ func TestGenerateToken(t *testing.T) {
 }
 ```
 
-- [ ] **Шаг 3: Запустить тест**
+- [x] **Шаг 3: Запустить тест**
 
 ```bash
 go test ./internal/auth/ -v
@@ -913,7 +913,7 @@ go test ./internal/auth/ -v
 
 Ожидаемый результат: PASS.
 
-- [ ] **Шаг 4: Создать `internal/email/email.go`**
+- [x] **Шаг 4: Создать `internal/email/email.go`**
 
 ```go
 package email
@@ -977,7 +977,7 @@ func (s *ResendSender) Send(to, subject, html string) error {
 }
 ```
 
-- [ ] **Шаг 5: Написать тест для LogSender**
+- [x] **Шаг 5: Написать тест для LogSender**
 
 Создать `internal/email/email_test.go`:
 
@@ -999,7 +999,7 @@ func TestLogSender_Send(t *testing.T) {
 }
 ```
 
-- [ ] **Шаг 6: Создать `internal/http/middleware/session.go`**
+- [x] **Шаг 6: Создать `internal/http/middleware/session.go`**
 
 ```go
 package middleware
@@ -1066,7 +1066,7 @@ func OptionalSession(queries *sqlc.Queries) func(http.Handler) http.Handler {
 }
 ```
 
-- [ ] **Шаг 7: Написать тест для middleware**
+- [x] **Шаг 7: Написать тест для middleware**
 
 Создать `internal/http/middleware/session_test.go`:
 
@@ -1129,7 +1129,7 @@ func TestRequireSession_InvalidToken(t *testing.T) {
 }
 ```
 
-- [ ] **Шаг 8: Создать `internal/http/handlers/auth.go`**
+- [x] **Шаг 8: Создать `internal/http/handlers/auth.go`**
 
 ```go
 package handlers
@@ -1323,7 +1323,7 @@ func writeError(w http.ResponseWriter, status int, code, message string) {
 
 **Заметка:** Типы из sqlc-генерации (параметры `CreateMagicLinkParams`, `CreateSessionParams` и т.д.) могут отличаться по именам полей. При компиляции сверься с `internal/db/sqlc/*.go` и поправь имена, если нужно.
 
-- [ ] **Шаг 9: Написать тесты для auth handlers**
+- [x] **Шаг 9: Написать тесты для auth handlers**
 
 Создать `internal/http/handlers/auth_test.go`:
 
@@ -1565,7 +1565,7 @@ func WithSession(queries *sqlc.Queries, next http.Handler) http.Handler {
 }
 ```
 
-- [ ] **Шаг 10: Подключить роуты auth в `cmd/server/main.go`**
+- [x] **Шаг 10: Подключить роуты auth в `cmd/server/main.go`**
 
 ```go
 queries := sqlc.New(database)
@@ -1596,7 +1596,7 @@ r.Group(func(r chi.Router) {
 })
 ```
 
-- [ ] **Шаг 11: Запустить все тесты**
+- [x] **Шаг 11: Запустить все тесты**
 
 ```bash
 go test ./internal/... -v
@@ -1604,7 +1604,7 @@ go test ./internal/... -v
 
 Ожидаемый результат: все тесты PASS.
 
-- [ ] **Шаг 12: Коммит**
+- [x] **Шаг 12: Коммит**
 
 ```bash
 git add internal/auth/ internal/email/ internal/http/ cmd/server/main.go
@@ -1612,8 +1612,8 @@ git commit -m "feat: аутентификация — magic link, сессии, 
 ```
 
 **Проверка:**
-- [ ] `go test ./internal/... -v` — все тесты проходят
-- [ ] `go build ./cmd/server/` — компилируется
+- [x] `go test ./internal/... -v` — все тесты проходят
+- [x] `go build ./cmd/server/` — компилируется
 
 ---
 

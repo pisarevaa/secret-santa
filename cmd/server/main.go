@@ -12,6 +12,10 @@ import (
 
 	"github.com/andreypisarev/secret-santa/internal/config"
 	"github.com/andreypisarev/secret-santa/internal/db"
+	"github.com/andreypisarev/secret-santa/internal/db/sqlc"
+	"github.com/andreypisarev/secret-santa/internal/email"
+	"github.com/andreypisarev/secret-santa/internal/http/handlers"
+	mw "github.com/andreypisarev/secret-santa/internal/http/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -49,12 +53,39 @@ func main() {
 		os.Exit(1)
 	}
 
+	queries := sqlc.New(database)
+
+	var emailSender email.Sender
+	if cfg.IsDev() {
+		emailSender = &email.LogSender{}
+	} else {
+		emailSender = &email.ResendSender{
+			APIKey: cfg.ResendAPIKey,
+			From:   cfg.EmailFrom,
+		}
+	}
+
+	authHandler := &handlers.AuthHandler{
+		Queries: queries,
+		Email:   emailSender,
+		Config:  cfg,
+	}
+
 	r := chi.NewRouter()
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.RealIP)
 
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
+	})
+
+	r.Post("/api/auth/request-link", authHandler.RequestLink)
+	r.Get("/api/auth/verify", authHandler.Verify)
+	r.Post("/api/auth/logout", authHandler.Logout)
+
+	r.Group(func(r chi.Router) {
+		r.Use(mw.RequireSession(queries))
+		r.Get("/api/auth/me", authHandler.Me)
 	})
 
 	srv := &http.Server{

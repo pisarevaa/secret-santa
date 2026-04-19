@@ -4517,7 +4517,7 @@ git commit -m "feat: раздача статики + smoke-тест полног
 
 ---
 
-### Фича 9: Деплой — Dockerfile и fly.toml
+### Фича 9: Деплой — Dockerfile и fly.toml ✅
 
 **Цель:** Приложение собирается в Docker-образ и готово к деплою на Fly.io.
 
@@ -4527,7 +4527,7 @@ git commit -m "feat: раздача статики + smoke-тест полног
 
 **Шаги:**
 
-- [ ] **Шаг 1: Создать `Dockerfile`**
+- [x] **Шаг 1: Создать `Dockerfile`**
 
 ```dockerfile
 # Stage 1: build frontend
@@ -4556,7 +4556,7 @@ EXPOSE 8080
 CMD ["/usr/local/bin/server"]
 ```
 
-- [ ] **Шаг 2: Создать `fly.toml`**
+- [x] **Шаг 2: Создать `fly.toml`**
 
 ```toml
 app = "secret-santa"
@@ -4586,7 +4586,7 @@ primary_region = "ams"
   destination = "/data"
 ```
 
-- [ ] **Шаг 3: Проверить Docker-сборку (если Docker установлен)**
+- [x] **Шаг 3: Проверить Docker-сборку (если Docker установлен)**
 
 ```bash
 cd /Users/andreypisarev/other/secret-santa
@@ -4595,7 +4595,7 @@ docker build -t secret-santa .
 
 Ожидаемый результат: образ собран.
 
-- [ ] **Шаг 4: Коммит**
+- [x] **Шаг 4: Коммит**
 
 ```bash
 git add Dockerfile fly.toml
@@ -4603,7 +4603,7 @@ git commit -m "feat: Dockerfile + fly.toml для деплоя на Fly.io"
 ```
 
 **Проверка:**
-- [ ] `docker build -t secret-santa .` — образ собирается (если Docker доступен)
+- [x] `docker build -t secret-santa .` — образ собирается (если Docker доступен)
 
 ---
 

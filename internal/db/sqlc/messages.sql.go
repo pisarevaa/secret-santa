@@ -42,6 +42,59 @@ func (q *Queries) CreateMessage(ctx context.Context, arg CreateMessageParams) (M
 	return i, err
 }
 
+const listChatMessages = `-- name: ListChatMessages :many
+SELECT id, group_id, sender_id, recipient_id, direction, body, created_at FROM messages
+WHERE group_id = ?
+  AND ((sender_id = ? AND recipient_id = ?) OR (sender_id = ? AND recipient_id = ?))
+ORDER BY created_at ASC
+LIMIT 50
+`
+
+type ListChatMessagesParams struct {
+	GroupID       int64
+	SenderID      int64
+	RecipientID   int64
+	SenderID_2    int64
+	RecipientID_2 int64
+}
+
+func (q *Queries) ListChatMessages(ctx context.Context, arg ListChatMessagesParams) ([]Message, error) {
+	rows, err := q.db.QueryContext(ctx, listChatMessages,
+		arg.GroupID,
+		arg.SenderID,
+		arg.RecipientID,
+		arg.SenderID_2,
+		arg.RecipientID_2,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Message
+	for rows.Next() {
+		var i Message
+		if err := rows.Scan(
+			&i.ID,
+			&i.GroupID,
+			&i.SenderID,
+			&i.RecipientID,
+			&i.Direction,
+			&i.Body,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listMessages = `-- name: ListMessages :many
 SELECT id, group_id, sender_id, recipient_id, direction, body, created_at FROM messages
 WHERE group_id = ? AND sender_id = ? AND recipient_id = ? AND direction = ?

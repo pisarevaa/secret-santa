@@ -12,3 +12,10 @@ SELECT * FROM messages
 WHERE group_id = ? AND sender_id = ? AND recipient_id = ? AND direction = ? AND id < ?
 ORDER BY created_at DESC
 LIMIT 50;
+
+-- name: ListChatMessages :many
+SELECT * FROM messages
+WHERE group_id = ?
+  AND ((sender_id = ? AND recipient_id = ?) OR (sender_id = ? AND recipient_id = ?))
+ORDER BY created_at ASC
+LIMIT 50;

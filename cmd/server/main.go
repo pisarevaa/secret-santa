@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/andreypisarev/secret-santa/internal/chat"
 	"github.com/andreypisarev/secret-santa/internal/config"
 	"github.com/andreypisarev/secret-santa/internal/db"
 	"github.com/andreypisarev/secret-santa/internal/db/sqlc"
@@ -74,6 +75,15 @@ func main() {
 	groupHandler := &handlers.GroupHandler{Queries: queries}
 	drawHandler := &handlers.DrawHandler{Queries: queries, DB: database}
 
+	hubManager := chat.NewHubManager(queries, database)
+	defer hubManager.CloseAll()
+
+	chatHandler := &handlers.ChatHandler{
+		Queries:    queries,
+		HubManager: hubManager,
+		Config:     cfg,
+	}
+
 	r := chi.NewRouter()
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.RealIP)
@@ -94,6 +104,8 @@ func main() {
 		r.Patch("/api/memberships/{id}", groupHandler.UpdateWishlist)
 		r.Post("/api/groups/{id}/draw", drawHandler.Draw)
 		r.Get("/api/groups/{id}/my-recipient", drawHandler.MyRecipient)
+		r.Get("/api/groups/{id}/chats/{role}", chatHandler.History)
+		r.Get("/ws/groups/{id}", chatHandler.WebSocket)
 	})
 
 	r.Group(func(r chi.Router) {

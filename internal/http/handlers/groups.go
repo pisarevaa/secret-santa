@@ -74,6 +74,7 @@ func (h *GroupHandler) GetByInviteCode(w http.ResponseWriter, r *http.Request) {
 	if !hasSession {
 		count, _ := h.Queries.CountMembersByGroup(r.Context(), group.ID)
 		writeJSON(w, http.StatusOK, map[string]interface{}{
+			"id":           group.ID,
 			"title":        group.Title,
 			"member_count": count,
 			"status":       group.Status,
@@ -108,6 +109,7 @@ func (h *GroupHandler) GetByInviteCode(w http.ResponseWriter, r *http.Request) {
 	if !isMember {
 		count, _ := h.Queries.CountMembersByGroup(r.Context(), group.ID)
 		writeJSON(w, http.StatusOK, map[string]interface{}{
+			"id":           group.ID,
 			"title":        group.Title,
 			"member_count": count,
 			"status":       group.Status,
@@ -116,6 +118,7 @@ func (h *GroupHandler) GetByInviteCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJSON(w, http.StatusOK, map[string]interface{}{
+		"id":               group.ID,
 		"title":            group.Title,
 		"status":           group.Status,
 		"members":          memberList,

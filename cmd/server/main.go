@@ -10,11 +10,13 @@ import (
 	"syscall"
 	"time"
 
+	secretsanta "github.com/andreypisarev/secret-santa"
 	"github.com/andreypisarev/secret-santa/internal/chat"
 	"github.com/andreypisarev/secret-santa/internal/config"
 	"github.com/andreypisarev/secret-santa/internal/db"
 	"github.com/andreypisarev/secret-santa/internal/db/sqlc"
 	"github.com/andreypisarev/secret-santa/internal/email"
+	httputil "github.com/andreypisarev/secret-santa/internal/http"
 	"github.com/andreypisarev/secret-santa/internal/http/handlers"
 	mw "github.com/andreypisarev/secret-santa/internal/http/middleware"
 	"github.com/go-chi/chi/v5"
@@ -112,6 +114,8 @@ func main() {
 		r.Use(mw.OptionalSession(queries))
 		r.Get("/api/groups/{inviteCode}", groupHandler.GetByInviteCode)
 	})
+
+	r.Handle("/*", httputil.StaticHandler(secretsanta.WebDist, "web/dist"))
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", cfg.Port),

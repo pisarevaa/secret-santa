@@ -17,7 +17,7 @@ RUN CGO_ENABLED=0 go build -o /out/server ./cmd/server
 
 # Stage 3: minimal runtime
 FROM alpine:3.20
-RUN adduser -D -u 1000 app
+RUN adduser -D -u 1000 app && mkdir -p /data && chown app:app /data
 COPY --from=server /out/server /usr/local/bin/server
 USER app
 EXPOSE 8080

@@ -6,7 +6,7 @@
 
 **Архитектура:** Go-монолит обслуживает REST API, WebSocket и встроенный React-фронт с одного домена. SQLite в файле, один инстанс на Fly.io. Пакеты в `internal/` содержат чистую доменную логику без зависимости от HTTP.
 
-**Стек:** Go 1.22+ (chi, coder/websocket, modernc.org/sqlite, sqlc, golang-migrate) | React 18 + Vite + TypeScript + Tailwind CSS v4 + react-router v7
+**Стек:** Go 1.26 (chi, coder/websocket, modernc.org/sqlite, sqlc, golang-migrate) | React 18 + Vite + TypeScript + Tailwind CSS v4 + react-router v7
 
 ---
 
@@ -4539,7 +4539,7 @@ COPY web/ ./
 RUN npm run build
 
 # Stage 2: build Go binary with embedded frontend
-FROM golang:1.22-alpine AS server
+FROM golang:1.26-alpine AS server
 WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
@@ -4635,7 +4635,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version: "1.26"
 
       - uses: actions/setup-node@v4
         with:

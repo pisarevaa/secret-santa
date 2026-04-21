@@ -26,7 +26,7 @@
 
 ## 2. Стек
 
-**Бэкенд (Go 1.22+):**
+**Бэкенд (Go 1.26):**
 - Роутер: `chi`
 - WebSocket: `coder/websocket`
 - БД: SQLite через `modernc.org/sqlite` (pure-Go, без CGO) + `sqlc` для запросов
@@ -343,7 +343,7 @@ COPY web/ ./
 RUN npm run build
 
 # Stage 2: build Go binary with embedded frontend
-FROM golang:1.22-alpine AS server
+FROM golang:1.26-alpine AS server
 WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download

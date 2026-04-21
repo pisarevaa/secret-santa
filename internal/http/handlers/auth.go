@@ -75,8 +75,13 @@ func (h *AuthHandler) Verify(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ml, err := h.Queries.GetMagicLink(r.Context(), token)
-	if err != nil {
+	if errors.Is(err, sql.ErrNoRows) {
 		writeError(w, http.StatusBadRequest, "invalid_input", "ссылка недействительна или истекла")
+		return
+	}
+	if err != nil {
+		slog.Error("get magic link", "error", err)
+		writeError(w, http.StatusInternalServerError, "internal", "внутренняя ошибка")
 		return
 	}
 
@@ -137,7 +142,9 @@ func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = h.Queries.DeleteSession(r.Context(), cookie.Value)
+	if err := h.Queries.DeleteSession(r.Context(), cookie.Value); err != nil {
+		slog.Error("delete session", "error", err)
+	}
 
 	http.SetCookie(w, &http.Cookie{
 		Name:     "s",

@@ -110,6 +110,43 @@ func (q *Queries) GetMyRecipient(ctx context.Context, arg GetMyRecipientParams) 
 	return i, err
 }
 
+const listMembersWithNamesByGroup = `-- name: ListMembersWithNamesByGroup :many
+SELECT m.id, m.user_id, u.name
+FROM memberships m
+JOIN users u ON u.id = m.user_id
+WHERE m.group_id = ?
+ORDER BY m.id
+`
+
+type ListMembersWithNamesByGroupRow struct {
+	ID     int64
+	UserID int64
+	Name   string
+}
+
+func (q *Queries) ListMembersWithNamesByGroup(ctx context.Context, groupID int64) ([]ListMembersWithNamesByGroupRow, error) {
+	rows, err := q.db.QueryContext(ctx, listMembersWithNamesByGroup, groupID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListMembersWithNamesByGroupRow
+	for rows.Next() {
+		var i ListMembersWithNamesByGroupRow
+		if err := rows.Scan(&i.ID, &i.UserID, &i.Name); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listMembershipsByGroup = `-- name: ListMembershipsByGroup :many
 SELECT id, group_id, user_id, wishlist, recipient_id, created_at FROM memberships WHERE group_id = ?
 `

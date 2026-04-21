@@ -10,6 +10,13 @@ SELECT * FROM memberships WHERE group_id = ? AND user_id = ?;
 -- name: ListMembershipsByGroup :many
 SELECT * FROM memberships WHERE group_id = ?;
 
+-- name: ListMembersWithNamesByGroup :many
+SELECT m.id, m.user_id, u.name
+FROM memberships m
+JOIN users u ON u.id = m.user_id
+WHERE m.group_id = ?
+ORDER BY m.id;
+
 -- name: UpdateWishlist :exec
 UPDATE memberships SET wishlist = ? WHERE id = ?;
 

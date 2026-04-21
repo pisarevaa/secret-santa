@@ -82,7 +82,7 @@ func (h *GroupHandler) GetByInviteCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	members, err := h.Queries.ListMembershipsByGroup(r.Context(), group.ID)
+	members, err := h.Queries.ListMembersWithNamesByGroup(r.Context(), group.ID)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, "internal", "внутренняя ошибка")
 		return
@@ -94,9 +94,8 @@ func (h *GroupHandler) GetByInviteCode(w http.ResponseWriter, r *http.Request) {
 
 	memberList := make([]map[string]interface{}, 0, len(members))
 	for _, m := range members {
-		user, _ := h.Queries.GetUserByID(r.Context(), m.UserID)
 		memberList = append(memberList, map[string]interface{}{
-			"name":  user.Name,
+			"name":  m.Name,
 			"is_me": m.UserID == userID,
 		})
 		if m.UserID == userID {

@@ -204,30 +204,6 @@ drain:
 	}
 }
 
-func TestHub_BroadcastDrawn(t *testing.T) {
-	f := setupChatTest(t)
-
-	hub := chat.NewHub(f.groupID, f.queries, f.memberships)
-	go hub.Run()
-	defer hub.Stop()
-
-	c1 := &chat.Client{UserID: f.users["alice"], GroupID: f.groupID, Send: make(chan []byte, 10)}
-	c2 := &chat.Client{UserID: f.users["bob"], GroupID: f.groupID, Send: make(chan []byte, 10)}
-	hub.Register(c1)
-	hub.Register(c2)
-
-	// Дать хабу время обработать регистрации перед broadcast.
-	time.Sleep(50 * time.Millisecond)
-	hub.BroadcastDrawn()
-
-	for _, c := range []*chat.Client{c1, c2} {
-		msg := readOutbound(t, c.Send)
-		if msg.Type != "drawn" {
-			t.Errorf("expected drawn, got %s", msg.Type)
-		}
-	}
-}
-
 func TestHub_InvalidMessages(t *testing.T) {
 	f := setupChatTest(t)
 

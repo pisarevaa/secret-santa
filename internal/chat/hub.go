@@ -189,18 +189,6 @@ func (h *Hub) handleMessage(cm ClientMessage) {
 	})
 }
 
-func (h *Hub) BroadcastDrawn() {
-	data, _ := json.Marshal(OutboundMessage{Type: "drawn"})
-	for _, conns := range h.clients {
-		for c := range conns {
-			select {
-			case c.Send <- data:
-			default:
-			}
-		}
-	}
-}
-
 func (h *Hub) sendToUser(userID int64, msg OutboundMessage) {
 	data, _ := json.Marshal(msg)
 	if conns, ok := h.clients[userID]; ok {

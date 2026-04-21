@@ -41,6 +41,8 @@ func TestLoad_CustomValues(t *testing.T) {
 	t.Setenv("ENV", "production")
 	t.Setenv("DATABASE_PATH", "/data/app.db")
 	t.Setenv("BASE_URL", "https://example.com")
+	t.Setenv("RESEND_API_KEY", "re_test")
+	t.Setenv("EMAIL_FROM", "noreply@example.com")
 
 	cfg, err := config.Load()
 	if err != nil {
@@ -78,5 +80,27 @@ func TestLoad_PortOutOfRange(t *testing.T) {
 	_, err := config.Load()
 	if err == nil {
 		t.Fatal("expected error for out-of-range PORT")
+	}
+}
+
+func TestLoad_ProductionRequiresResendKey(t *testing.T) {
+	t.Setenv("ENV", "production")
+	t.Setenv("RESEND_API_KEY", "")
+	t.Setenv("EMAIL_FROM", "noreply@example.com")
+
+	_, err := config.Load()
+	if err == nil {
+		t.Fatal("expected error when RESEND_API_KEY is empty in production")
+	}
+}
+
+func TestLoad_ProductionRequiresEmailFrom(t *testing.T) {
+	t.Setenv("ENV", "production")
+	t.Setenv("RESEND_API_KEY", "re_test")
+	t.Setenv("EMAIL_FROM", "")
+
+	_, err := config.Load()
+	if err == nil {
+		t.Fatal("expected error when EMAIL_FROM is empty in production")
 	}
 }

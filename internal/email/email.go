@@ -3,6 +3,7 @@ package email
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -28,6 +29,9 @@ type ResendSender struct {
 }
 
 func (s *ResendSender) Send(to, subject, html string) error {
+	if s.APIKey == "" || s.From == "" {
+		return errors.New("resend: API key or sender not configured")
+	}
 	payload := map[string]interface{}{
 		"from":    s.From,
 		"to":      []string{to},

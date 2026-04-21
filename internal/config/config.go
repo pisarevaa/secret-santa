@@ -44,7 +44,7 @@ func Load() (*Config, error) {
 		dbPath = "app.db"
 	}
 
-	return &Config{
+	cfg := &Config{
 		BaseURL:      os.Getenv("BASE_URL"),
 		DatabasePath: dbPath,
 		ResendAPIKey: os.Getenv("RESEND_API_KEY"),
@@ -52,7 +52,18 @@ func Load() (*Config, error) {
 		Port:         port,
 		Env:          env,
 		LogLevel:     logLevel,
-	}, nil
+	}
+
+	if cfg.Env == "production" {
+		if cfg.ResendAPIKey == "" {
+			return nil, fmt.Errorf("RESEND_API_KEY is required when ENV=production")
+		}
+		if cfg.EmailFrom == "" {
+			return nil, fmt.Errorf("EMAIL_FROM is required when ENV=production")
+		}
+	}
+
+	return cfg, nil
 }
 
 func (c *Config) IsDev() bool {
